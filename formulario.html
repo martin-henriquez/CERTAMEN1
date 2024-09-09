@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Verde</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- BARRA NAVEGACION -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="menu"> 
+        <div class="container-fluid py-3">
+            <a class="navbar-brand" href="index.html" id="title"><strong>Tverde</strong></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav" >                
+                    <a class="nav-link active" aria-current="page" href="index.html"><strong>Inicio</strong></a>
+                    <a class="nav-link" href="catalogo.html"><strong>Catalogo</strong></a>
+                    <a class="nav-link" href="formulario.html"><strong>Solicitud de Reciclaje</strong></a>               
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- FORMULARIO -->
+    <div class="container-fluid p-4 container-sm">
+        
+        <div class="formulario p-5 "> 
+            <p class="text-center fs-3 "><strong> FORMULARIO </strong></p>
+            
+            <div class="row mb-3">
+                <div class="col">        
+                    <select class="form-select shadow-sm" id="tipoResiduo" name="tipoResiduo" onchange="cambioSubCatg()" >
+                        <option selected>Tipo de Residuo</option>
+                        <option value="plastico">Plástico</option>
+                        <option value="papel">Papel</option>
+                        <option value="vidrio">Vidrio</option>
+                        <option value="metales">Metales</option>
+                        <option value="electronicos">Electrónicos</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-select shadow-sm" id="subCatgResiduo" name="subCatgResiduo">
+                        <option selected>Subcategoria de Residuo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-floating mb-3 shadow-sm">
+                <input type="number" class="form-control" id="cant" placeholder="">
+                <label for="floatingInput">Cantidad</label>
+            </div>
+            <div class="form-floating mb-3 shadow-sm">
+                <input type="text" class="form-control" id="nom" placeholder="" >
+                <label for="floatingInput">Nombre</label>
+            </div>
+            <div class="form-floating mb-3 shadow-sm">
+                <input type="email" class="form-control" id="correo" placeholder="">
+                <label for="floatingInput">Correo Electronico</label>
+            </div>
+            <div class="form-floating mb-3 shadow-sm">
+                <input type="text" class="form-control" id="direccion" placeholder="">
+                <label for="floatingInput">Direccion</label>
+            </div>
+            <div class="form-floating mb-3 shadow-sm">
+                <textarea class="form-control" placeholder="Leave a comment here" id="comentario" style="height: 200px"></textarea>
+                <label for="floatingTextarea2">Comentario</label>
+            </div>
+            
+            <button type="button" class="btn btn-outline-secondary" id="submit">Enviar</button>
+            <p class="warnings" id="warnings" style="color:red;"></p>
+        </div>
+
+    </div>
+
+    <script>
+        
+        document.getElementById("submit").addEventListener("click", function() {
+        let warnings = "";
+        let entrar = false;
+        
+        const cantidad = document.getElementById("cant").value.trim();
+        const nom = document.getElementById("nom").value.trim();
+        const correo = document.getElementById("correo").value.trim();
+        const direccion = document.getElementById("direccion").value.trim();
+        const comentario = document.getElementById("comentario").value.trim();
+        const tipoResiduo = document.getElementById("tipoResiduo").value;
+        const subCatgResiduo = document.getElementById("subCatgResiduo").value;
+        const warningsField = document.getElementById("warnings");
+        
+        //VALIDAR CANTIDAD
+        if (isNaN(cantidad) || cantidad <= 0) {
+            warnings += "Por favor, ingresa una cantidad válida de productos mayor que 0.<br>";
+            entrar = true;
+        }
+        // VALIDAR NOMBRE
+        if (nom.length < 6) {
+            warnings += "El nombre debe tener al menos 3 caracteres.<br>";
+            entrar = true;
+        }
+
+        // VALIDAR CORREO
+        const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!correoRegex.test(correo)) {
+            warnings += "El correo electrónico no es válido.<br>";
+            entrar = true;
+        }
+
+        // VALIDAR DIRECCION
+        if (direccion.length < 5) {
+            warnings += "La dirección debe tener al menos 5 caracteres.<br>";
+            entrar = true;
+        }
+
+        // VALIDAR CATEGORIAS
+        if (tipoResiduo === "Tipo de Residuo") {
+            warnings += "Debes seleccionar un tipo de residuo.<br>";
+            entrar = true;
+        }
+
+        if (subCatgResiduo === "Selecciona una Categoria de Residuo" || subCatgResiduo === "") {
+            warnings += "Debes seleccionar una subcategoría de residuo.<br>";
+            entrar = true;
+        }
+
+        // MOSTRAR REQUISITOS
+        if (entrar) {
+            warningsField.innerHTML = warnings;
+        } else {
+            warningsField.innerHTML = "";
+            alert("Formulario enviado correctamente");
+            
+        }
+        });
+
+        function cambioSubCatg() {
+            const tipoResiduo = document.getElementById("tipoResiduo").value;
+            const subcatgResiduo = document.getElementById("subCatgResiduo");
+
+            subcatgResiduo.innerHTML = "";
+
+            const subcategorias = {
+                plastico: ["Botellas", "Envases", "Bolsas"],
+                papel: ["Periódicos", "Cartón", "Papel de oficina"],
+                vidrio: ["Botellas", "Frascos", "Cristalería"],
+                metales: ["Latas", "Cables", "Electrodomésticos pequeños"],
+                electronicos: ["Teléfonos móviles", "Baterías", "Componentes de computadoras"]
+            };
+
+            // AÑADIMOS LAS SUBCATEGORÍAS CORRESPONDIENTES
+            if (subcategorias[tipoResiduo]) {
+                subcategorias[tipoResiduo].forEach(function(subcategoria) {
+                    const option = document.createElement("option");
+                    option.value = subcategoria.toLowerCase().replace(" ", "_");
+                    option.text = subcategoria;
+                    subcatgResiduo.add(option);
+                });
+            } else {
+                const defaultOption = document.createElement("option");
+                defaultOption.text = "Selecciona una Categoria de Residuo";
+                subcatgResiduo.add(defaultOption);
+            }
+        }
+    
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/formulario.js"></script>
+</body>
+</html>
